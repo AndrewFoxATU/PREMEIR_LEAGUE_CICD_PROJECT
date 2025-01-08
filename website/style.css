@@ -1,0 +1,138 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Arial', sans-serif;
+    padding-top: 30px;
+}
+
+.container {
+    max-width: 900px;
+}
+
+.card {
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+.card-header {
+    background-color: #3f1052;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-radius: 15px 15px 0 0;
+    padding: 15px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.form-control {
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.btn-primary {
+    background-color: #3f1052;
+    border-radius: 25px;
+    padding: 12px 25px;
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #5b2383;
+}
+
+.btn-link {
+    font-size: 0.9rem;
+    color: #3f1052;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+    color: #5b2383;
+}
+
+.loading {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #3f1052;
+    margin: 20px 0;
+}
+
+.error {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.list-group-item {
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    padding: 12px;
+}
+
+.card-footer {
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 10px;
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    justify-content: center;
+}
+
+.title-container h1 {
+    font-size: 2rem;
+    margin: 0 10px;
+    color: #3f1052;
+    flex-grow: 1;
+}
+
+.title-container img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.form-label {
+    margin-bottom: 10px;
+}
+
+.list-group {
+    padding-left: 0;
+}
+
+.list-group-item a {
+    margin-left: 10px;
+}
+
+.advanced-stats {
+    margin-top: 20px;
+    font-size: 1rem;
+    color: #3f1052;
+    font-weight: bold;
+}
+
+.news {
+    font-weight: bold;
+    color: #d9534f;
+}
+
+.btn-back {
+    background-color: #3f1052;
+    color: white;
+    border-radius: 25px;
+    padding: 10px 20px;
+    text-decoration: none;
+}
+
+.btn-back:hover {
+    background-color: #5b2383;
+    text-decoration: none;
+}

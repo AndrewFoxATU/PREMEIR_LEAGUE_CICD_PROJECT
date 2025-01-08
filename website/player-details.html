@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Stats</title>
+    <link rel="icon" href="https://ssl.gstatic.com/onebox/media/sports/logos/5D811WOqeV3SRG6qt-DDPA_64x64.png" type="image/png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    
+</head>
+
+<body>
+    <div class="container mt-5">
+        <!-- Title container with logo on the left -->
+        <div class="title-container">
+            <img src="https://ssl.gstatic.com/onebox/media/sports/logos/5D811WOqeV3SRG6qt-DDPA_64x64.png" alt="Premier League Logo">
+            <h1>Premier League Player Stats</h1>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Player Stats</h3>
+            </div>
+            <div class="card-body">
+                <div id="playerDetails">
+                </div>
+                <div id="loadingMessage" class="loading">
+                    <p>Loading player stats...</p>
+                </div>
+                <div id="errorMessage" class="error"></div>
+            </div>
+            <div class="card-footer">
+                <a href="PlayersbyClub.html" class="btn btn-back">Back to Clubs</a>
+                <a href="playerRankings.html" class="btn btn-back">Back to Rankings</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to get query parameters from the URL
+        function getQueryParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');  // Retrieve player ID from URL
+        }
+
+        // Fetch player stats based on the players ID
+        async function fetchPlayerStats(playerId) {
+            const playerDetailsDiv = document.getElementById('playerDetails');
+            const loadingMessage = document.getElementById('loadingMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            try {
+                loadingMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+
+                const response = await fetch(`http://localhost:8081/api/players/id/${encodeURIComponent(playerId)}`);
+                
+                if (!response.ok) {
+                    throw new Error('Player not found or error fetching data');
+                }
+
+                const player = await response.json();
+
+                if (player) {
+                    loadingMessage.style.display = 'none';
+                    // Display the players stats
+                    playerDetailsDiv.innerHTML = `
+                        <h3 class="text-center">${player.web_name} - <span class="text-muted">${player.position}</span></h3>
+                        <p><strong>Team:</strong> ${player.team}</p>
+                        <p><strong>Yellow Cards:</strong> ${player.yellow_cards}</p>
+                        <p><strong>Own Goals:</strong> ${player.own_goals}</p>
+                        <p><strong>Goals Scored:</strong> ${player.goals_scored}</p>
+                        <p><strong>Goals Conceded:</strong> ${player.goals_conceded}</p>
+                        <p><strong>Assists:</strong> ${player.assists}</p>
+                        <p><strong>Clean Sheets:</strong> ${player.clean_sheets}</p>
+                        <p><strong>Minutes Played:</strong> ${player.minutes}</p>
+                        <p><strong>Starts:</strong> ${player.starts}</p>
+                        <p><strong>Red Cards:</strong> ${player.red_cards}</p>
+                        <p><strong>News:</strong> ${player.news || 'No updates available'}</p>
+                        
+                        <div class="advanced-stats">
+                            <h5>Advanced Stats</h5>
+                            <p><strong>ICT Index:</strong> ${player.ict_index}</p>
+                            <p><strong>Expected Goals per 90:</strong> ${player.expected_goals_per_90}</p>
+                            <p><strong>Expected Assists per 90:</strong> ${player.expected_assists_per_90}</p>
+                            <p><strong>Expected Goal Involvements per 90:</strong> ${player.expected_goal_involvements_per_90}</p>
+                        </div>
+                    `;
+                } else {
+                    throw new Error('Player not found');
+                }
+            } catch (error) {
+                loadingMessage.style.display = 'none';
+                errorMessage.style.display = 'block';
+                errorMessage.innerHTML = `Error: ${error.message}`;
+            }
+        }
+
+        // Get the player ID from the string and get their stats
+        const playerId = getQueryParams();
+        if (playerId) {
+            fetchPlayerStats(playerId);
+        } else {
+            document.getElementById('playerDetails').innerHTML = '<p class="text-danger">Player not found.</p>';
+        }
+    </script>
+</body>
+
+</html>

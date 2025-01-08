@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://ssl.gstatic.com/onebox/media/sports/logos/5D811WOqeV3SRG6qt-DDPA_64x64.png" type="image/png">
+    <title>Premier League Player Stats</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="title-container">
+            <img src="https://ssl.gstatic.com/onebox/media/sports/logos/5D811WOqeV3SRG6qt-DDPA_64x64.png">
+            <h1>Premier League Player Stats</h1>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Player Rankings by Statistic</h3>
+            </div>
+            
+            
+            <div class="card-body">
+                <form id="statForm">
+                    <div class="mb-3">
+                        <label for="statDropdown" class="form-label">Choose Statistic:</label>
+                        <select class="form-control" id="statDropdown">
+                            <option value="goals_scored">Goals Scored</option>
+                            <option value="assists">Assists</option>
+                            <option value="yellow_cards">Yellow Cards</option>
+                            <option value="own_goals">Own Goals</option>
+                            <option value="goals_conceded">Goals Conceded</option>
+                            <option value="clean_sheets">Clean Sheets</option>
+                            <option value="minutes">Minutes</option>
+                            <option value="starts">Starts</option>
+                            <option value="red_cards">Red Cards</option>
+                            <option value="ict_index">ICT index</option>
+                            <option value="expected_goals_per_90">Expected Goals per 90</option>
+                            <option value="expected_assists_per_90">Expected Assists per 90</option>
+                            <option value="expected_goal_involvements_per_90">Expected Goal Involvements per 90</option>
+
+                            
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Get Rankings</button>
+
+                </form>
+
+                <div id="loadingMessage" class="loading" style="display: none;">
+                    Loading rankings...
+                </div>
+
+                <ul id="rankingList" class="list-group mt-3"></ul>
+                <div id="errorMessage" class="error" style="display: none;"></div>
+            </div>
+            <div class="card-footer">
+                <a href="PlayersbyClub.html" class="btn btn-secondary btn-link">Switch to Clubs</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('statForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const stat = document.getElementById('statDropdown').value;
+        const rankingList = document.getElementById('rankingList');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const errorMessage = document.getElementById('errorMessage');
+
+        rankingList.innerHTML = ''; // clear previous results
+        loadingMessage.style.display = 'block'; // show loading message
+        errorMessage.style.display = 'none'; // hide error message
+
+        try {
+            const response = await fetch(`http://localhost:8082/api/rankings/${stat}`);
+            if (!response.ok) {
+                throw new Error('Error fetching rankings');
+            }
+
+            const players = await response.json();
+            if (players.length === 0) {
+                rankingList.innerHTML = '<li class="list-group-item">No players found for this statistic.</li>';
+            } else {
+                players.forEach(player => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'list-group-item';
+
+                    // Ensure both `player.web_name` and `player.team` exist
+                    const playerName = player.web_name || 'Unknown Player';
+                    const playerTeam = player.team || 'Unknown Team';
+
+                    // Display player name, team, and stat
+                    listItem.textContent = `${playerName} (${playerTeam}): ${player[stat]}`;
+
+                    // Add "View Details" link
+                    const viewDetailsLink = document.createElement('a');
+                    viewDetailsLink.href = `player-details.html?id=${player.id}`;
+                    viewDetailsLink.textContent = 'View Details';
+                    viewDetailsLink.className = 'btn btn-link btn-sm ms-2';
+
+                    listItem.appendChild(viewDetailsLink);
+                    rankingList.appendChild(listItem);
+                });
+            }
+        } catch (error) {
+            errorMessage.style.display = 'block';
+            errorMessage.textContent = 'Error fetching data. Please try again later.';
+        } finally {
+            loadingMessage.style.display = 'none'; // Hide loading message
+        }
+    });
+
+    </script>
+</body>
+
+</html>

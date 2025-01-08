@@ -1,1 +1,2 @@
-(Blank diagram.png)
+
+![Alt text](Blank diagram.png)
